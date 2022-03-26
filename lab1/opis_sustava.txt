@@ -1,16 +1,20 @@
 Sustav je ostvaren korištenjem AES-GCM, te je kao glavni izvor korištena stranica:
 https://pycryptodome.readthedocs.io/en/latest/src/cipher/modern.html#gcm-mode-1
 
+Za AES-GCM sam se odlučio jer je na prezentaciji predstavljen kao primjer algoritma koji istovremeno osigurava povjerljivost i integritet.
+
 U datoteci vault se čuvaju kriptirani podaci o stranicama i pripadnim lozinkama.
 
-Nakon što za stranicu www.fer.hr dodamo lozinku ferlozinka, a za stranicu ffzg.unizg.hr dodamo lozinku ffzg lozinku, čisti tekst naše jednostavne baze podataka je:
+Nakon što za stranicu fer.unizg.hr dodamo lozinku ferlozinka, a za stranicu ferko.fer.hr dodamo lozinku ferkolozinka, čisti tekst naše jednostavne baze podataka je:
 Password manager
-www.fer.hr ferlozinka
-ffzg.unizg.hr ffzglozinka
+fer.unizg.hr ferlozinka
+ferko.fer.hr ferkolozinka
 
-Početni je redak "Password manager", dodaje se prilikom naredbe init, i ignorira se tijekom dohvaćanja lozinki.
+Početni je redak "Password manager", dodaje se prilikom naredbe init (kako bi se neki tekst mogao inicijalno kriptirati), i ignorira se tijekom dohvaćanja lozinki.
 
 Zapisi su odvojeni znakom za novi red (ASCII 10), a unutar pojedinog zapisa stranica i lozinka su odvojeni znakom razmaka (ASCII 32), i ovo je ispravan način zapisivanja jer stranica i lozinka sadržavaju ASCII znakove od 33 do 126.
+
+Naredba help izlistava sve dostupne naredbe s kratkim opisom.
 
 Naredba init radi sljedeće korake:
 - stvori slučajan salt dugačak 256 bita
@@ -18,21 +22,21 @@ Naredba init radi sljedeće korake:
 - stvori nasumičan nonce, tj. IV, dugačak 96 bita
 - stvori ključ za AES korištenjem ključa i nonce-a
 - šifrira tekst "Password manager" korištenjem AES ključa
-- zapiše u datoteku vault, redom, salt (dugačak 256 bita), nonce (dugačak 96 bita), oznaku (dugačku 64 bita) i kriptirani izvorni tekst
+- zapiše u datoteku vault, redom: salt (dugačak 256 bita), nonce (dugačak 96 bita), oznaku (dugačku 128 bita) i kriptirani izvorni tekst
 
-Prije naredbi put i get poziva se provjera, u obliku naredbe check.
+Prije naredbi put, get, count i list poziva se provjera, u obliku naredbe check.
 
 Naredba check izvodi sljedeće korake:
 - pročita datoteku vault i s njenog početka pročita salt, nonce, oznaku, te kriptat koji čini ostatak datoteke
 - uz pomoć salta, unešene galvne lozinke i funkcije za derivaciju ključa, izgenerira ključ
-- uz pomoć slt-a i ključa stvori AES ključ
+- uz pomoć salt-a i ključa stvori AES ključ
 - uz pomoć AES ključa dekriptira šifrirani tekst, te ga provjeri korištenjem oznake
 - ako provjera ne uspije, prijavi pogrešku i izađe iz programa
 - ako provjera uspije, pročita datoteku, razdvoji zapise u mapu (tj. Python dictionary) stranica-lozinka, i vrati tu mapu
 
 Naredba get izvodi sljedeće korake:
 - pozove naredbu check
-- u dobivenoj mapi potraži zapis koji odgovara stranici koje je upisana kao argument naredbe
+- u dobivenoj mapi potraži zapis koji odgovara stranici koja je upisana kao argument naredbe
 - ako takav zapis postoji, ispiše lozinku, a inače ispiše progrešku
 
 Naredba put izvodi sljedeće korake:
@@ -40,7 +44,20 @@ Naredba put izvodi sljedeće korake:
 - u dobivenu mapu zapiše zapis stranica-lozinka (ili staru lozinku zamijeni novom, ako je za unešenu stranicu prethodno unesena lozinka)
 - izvede sve korake koje izvede naredba init, pritom generirajući posve novi salt i nonce
 
+Naredba count izvodi sljedeće korake:
+- pozove naredbu check
+- ispiše broj zapisa
+
+Naredba list izvodi sljedeće korake:
+- pozove naredbu check
+- ispiše sve zapise
+
 Sigurnosni zahtjevi su zadovoljeni iz sljedećih razloga:
 - napadač može pristupiti datoteci vault, no ne može ju pročitati jer je šifrirana (salt i nonce su nešifrirani, no njihova javnost ne narušava sigurnost sustava)
-- sustav uspješno prepoznaje promjenu datoteke vault, i u takvim slučajevima postaje neresponzivan (prije svake akcije put/get se prvo provjerava integritet podataka) pa korisnici sustava znaju kad im je netko mijenjao podatke
+- sustav uspješno prepoznaje promjenu datoteke vault, i u takvim slučajevima postaje neresponzivan (prije svake akcije put/get/count/list se prvo provjerava integritet podataka) pa korisnici sustava znaju kad im je netko mijenjao podatke
 - pri svakoj promjeni zapisa se generiraju drukčiji salt i nonce, pa kriptirani podaci izgledaju drukčije nakon svake promjene, pa napadač nema neke koristi od toga da skuplja verzije datoteke između pojedinih izmjena
+
+Upute za pokretanje bash skripte:
+- u terminal je potrebno unijeti sljedeće dvije naredbe:
+    chmod u+x run.sh
+    ./run.sh
