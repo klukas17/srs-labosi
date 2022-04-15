@@ -7,6 +7,7 @@ from getpass import getpass
 from base64 import b64encode, b64decode
 from Crypto.Random import get_random_bytes
 
+# funkcija koja provjerava ispravnog unešenih argumenata
 def verify_args():
     if len(argv) <= 1:
         print("Missing arguments! First argument must be {username}.")
@@ -15,16 +16,19 @@ def verify_args():
         print("Wrong arguments! Arguments must be in '{username}' format.")
         exit(1)
 
+# funkcija koja se poziva u slučaju neuspjelog pokušaja prijave
 def fail():
     print("Username or password incorrect.")
     exit(1)
 
+# funkcija koja vrši login
 def login():
     vault = read_vault()
     usr = argv[1]
 
     password = getpass("Password:")
 
+    # potrebno radno čekanje kako bi jednako trajala neuspjela prijava zbog nepostojećeg korisničkog imena i krive lozinke
     if usr not in vault:
         pswd = hash_password("random", get_random_bytes(16))
         fail()

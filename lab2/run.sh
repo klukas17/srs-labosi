@@ -44,7 +44,7 @@ echo ""
 echo ""
 
 # login kada je potrebno promijeniti lozinku
-./login.py korisnik1 # input: lozinka1, lozinka11, lozinka11
+./login.py korisnik1 # input: lozinka1, lozinka1, lozinka1, lozinka11, lozinka11
 echo ""
 
 # ponovan login za prethodnog korisnika

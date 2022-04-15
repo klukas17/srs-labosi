@@ -2,6 +2,7 @@ from getpass import getpass
 from base64 import b64encode
 from Crypto.Protocol.KDF import bcrypt
 
+# funkcija čita i obrađuje unos lozinke sa standardnog ulaza
 def read_password():
 
     counter = 0
@@ -22,6 +23,7 @@ def read_password():
 
     return pass1
 
+# funkcija čita i obrađuje unos lozinke onda kada korisnik mijenja svoju lozinku
 def new_password(old_salt, hash):
     
     counter = 0
@@ -34,7 +36,7 @@ def new_password(old_salt, hash):
         if pass1 == pass2:
             password = pass1.encode('utf-8')
             b64password = b64encode(password)
-            bcrypt_hash = bcrypt(b64password, 16, old_salt)
+            bcrypt_hash = bcrypt(b64password, 14, old_salt)
 
             if hash == bcrypt_hash:
                 print("New password can't be the same as old password!")
@@ -51,10 +53,11 @@ def new_password(old_salt, hash):
 
     return pass1
 
+# funkcija računa kriptografski sažetak lozinke na temelju same lozinke, salta i funkcije bcrypt
 def hash_password(password, salt):
     
     password = password.encode('utf-8')
     b64password = b64encode(password)
-    bcrypt_hash = bcrypt(b64password, 16, salt)
+    bcrypt_hash = bcrypt(b64password, 14, salt)
 
     return bcrypt_hash

@@ -16,7 +16,7 @@ Skripta password_management nudi sljedeće funkcije:
     new_password()
         slično kao read_password(), poziva se kada korisnik mijenja lozinku
     hash_password()
-        računa hash lozinke korištenjem salta
+        računa hash lozinke korištenjem salta i funkcije bcrypt
 
 Skripta usermgmt nudi sljedeće funkcije:
     add()
@@ -41,3 +41,9 @@ Minimalna duljina lozinke je 8 znakova, kako bi se napadaču otežalo pogađanje
 Pri unosu lozinki, unešeni tekst nije vidljiv, i to poboljšava sigurnost lozinki prilikom unosa.
 
 Kada administrator označi da korisnik mora promijeniti lozinku, korisnik ju uistinu mora promijeniti, odnosno ne smije ju "promijeniti" na staru lozinku.
+
+Pri pozivu skripte run.sh potrebno je u terminal upisati sljedeće dvije naredbe:
+    chmod u+x run.sh
+    ./run.sh
+
+S obzirom da pojedine naredbe zahtijevaju unos sa stdin, pri pokretanju skripte run.sh korisnik mora sam unijeti podatke, a pored svake naredbe je u komentaru napisan zamišljeni unos.

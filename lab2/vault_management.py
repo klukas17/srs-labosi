@@ -1,7 +1,9 @@
+# funkcija stvara praznu datoteku vault.txt
 def init():
     f = open('vault.txt', 'w')
     f.close()
 
+# funkcija čita datoteku vault.txt i sprema ju u asocijativno polje vault
 def read_vault():
     try:
         f = open('vault.txt', 'r')
@@ -22,6 +24,7 @@ def read_vault():
 
     return vault
 
+# funkcija na temelju asocijativnog polja vault sprema podatke u datotek u vault.txt
 def write_vault(vault):
     f = open('vault.txt', 'w')
 

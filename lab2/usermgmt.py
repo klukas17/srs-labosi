@@ -6,6 +6,7 @@ from base64 import b64encode
 from vault_management import read_vault, write_vault
 from password_management import hash_password, read_password
 
+# funkcija koja provjerava ispravnog unešenih argumenata
 def verify_args():
     if len(argv) <= 1:
         print("Missing arguments! First argument can be add, passwd, forcepass, del, init.")
@@ -33,6 +34,7 @@ def verify_args():
         print("Wrong arguments! First argument can be add passwd, forcepass, del.")
         exit(1)
 
+# funkcija koja čita željenu lozinku sa stdin i ažurira asocijativno polje vault
 def new_password(vault, usr):
 
     salt = get_random_bytes(16)
@@ -41,6 +43,7 @@ def new_password(vault, usr):
 
     return vault
 
+# funkcija koja dodaje korisnika
 def add():
     vault = read_vault()
     usr = argv[2]
@@ -55,6 +58,7 @@ def add():
 
     print("User added successfully!")
 
+# funkcija koja mijenja lozinku postojećeg korisnika
 def passwd():
     vault = read_vault()
     usr = argv[2]
@@ -69,6 +73,7 @@ def passwd():
 
     print("Password changed successfully!")
 
+# funkcija koja prisili korisnika da promijeni lozinku pri idućoj prijavi
 def forcepass():
     vault = read_vault()
     usr = argv[2]
@@ -82,6 +87,7 @@ def forcepass():
 
     print("User will be required to change password on next login!")
 
+# funkcija koja briše korisnika
 def delete():
     vault = read_vault()
 
