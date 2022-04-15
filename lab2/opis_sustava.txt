@@ -1,0 +1,43 @@
+U datoteci vault.txt čuvaju se korisnički podaci u sljedećem formatu:
+svaki redak odgovara jednom korisniku
+    korisničko_ime hash_lozinke salt {0, 1} (zadnji podatak govori mora li korisnik promijeniti lozinku ili ne)
+
+Skripta vault_management nudi sljedeće funkcije:
+    init()
+        stvara praznu datoteku vault.txt
+    read_vault()
+        čita datoteku vault.txt
+    write_vault()
+        zapisuje novo stanje lozinki u vault.txt
+
+Skripta password_management nudi sljedeće funkcije:
+    read_password()
+        čita unos nove lozinke sa standardnog ulaza
+    new_password()
+        slično kao read_password(), poziva se kada korisnik mijenja lozinku
+    hash_password()
+        računa hash lozinke korištenjem salta
+
+Skripta usermgmt nudi sljedeće funkcije:
+    add()
+        dodaje korisnika u sustav
+    passwd()
+        mijenja lozinku postojećeg korisnika
+    forcepass()
+        prisiljava korisnika na promjenu lozinke
+    delete()
+        briše korisnika iz sustava
+
+Skripta login nudi sljedeće funkcije:
+    login()
+        prijava u sustav
+
+Za svakog korisnika koristi se poseban salt, i on se mijenja pri svakoj promjeni lozinke, kako u bazi dvije lozinke koje su jednake ne bi imale isti zapis, i kako bi se onemogućio rainbow tables napad.
+
+Pri izračunavanju kriptografskog sažetka se koristi pouzdana i provjerena funkcija bcrypt.
+
+Minimalna duljina lozinke je 8 znakova, kako bi se napadaču otežalo pogađanje lozinki.
+
+Pri unosu lozinki, unešeni tekst nije vidljiv, i to poboljšava sigurnost lozinki prilikom unosa.
+
+Kada administrator označi da korisnik mora promijeniti lozinku, korisnik ju uistinu mora promijeniti, odnosno ne smije ju "promijeniti" na staru lozinku.
