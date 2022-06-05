@@ -1,0 +1,25 @@
+>> Prije konfiguracije firewalla, pokretanjem naredbi 'telnet 203.0.113.10' i 'ssh 203.0.113.10' možemo vidjeti promet tj. pakete na sučelju eth0 čvora firewall.
+
+>> Rješenje je testirano korištenjem skripte test.sh koja je proširena tako da ispituje i DNS na portu 53. UDP konekcije su ispitane korištenjem alata nmap. Kod svakog pravila gdje je testirana UDP konekcija to će biti posebno napisano.
+
+>> Komentari na pravila u datoteci FW.sh:
+
+>> PRAVILO 1:
+Ako iz vanjske mreže dolazi paket čija izvorišna adresa je unutar lokalne mreže ili unutar DMZ-a, to je očito neispravno.
+
+>> PRAVILO 2:
+Na sučelju koje gleda prema lokalnoj mreži, sve što ima izvorišnu adresu unutar te mreže može proći van.
+
+>> PRAVILO 3:
+Ako je odredišna adresa 203.0.113.10, mogu proći UDP paketi s portom 53 i TCP paketi s portom 22 i 53.
+Test UDP konekcije: $ sudo himage PC1 nmap -n -Pn -sU -p 53 203.0.113.10
+
+>> PRAVILO 4:
+Na sučelju koje gleda prema DMZ se provjerava je li izvor 203.0.113.10, a odredište 10.0.0.11.
+
+>> PRAVILO 5:
+Sa servera moguće slati DNS upite bilo gdje ako se koristi port 53 i protokol UDP ili TCP.
+Test UDP konekcije: $ sudo himage server nmap -n -Pn -sU -p 53 192.0.2.20
+
+>> PRAVILO 6:
+Na sučelju eth1 koje gleda prema lokalnoj mreži vrši se provjera je li izvor admin i je li protokol SSH.
